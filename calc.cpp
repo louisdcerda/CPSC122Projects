@@ -10,49 +10,50 @@ using namespace std;
 
 Calc::Calc(char* argvIn)
 {
-    //initialize variables
-    InitializeVars();
-    //check for valid input
+    inFix = new char[strlen(argvIn) + 1];
+    strcpy(inFix, argvIn);
     if(!CheckTokens())
     {
-        cout << "Invalid input.  Terminating program." << endl;
+        cout << "Error: Invalid input" << endl;
         exit(EXIT_FAILURE);
     }
-    //create value table
-    MakeValueTbl();
-    //parse input
-    Parse();
-    //check for balanced parentheses
+    //CheckParens
     if(!CheckParens())
     {
-        cout << "Unbalanced parentheses.  Terminating program." << endl;
+        cout << "Error: Invalid input" << endl;
         exit(EXIT_FAILURE);
     }
+
+    //MakeValueTbl
+    MakeValueTbl();
+    //Parse
+    Parse();
 }
 
 Calc::~Calc()
 {
-    //delete dynamically allocated memory
+    stk->~Stack();
+    valueIdx = 0;
     delete [] valueTbl;
-    delete [] infix;
-    delete [] postfix;
+    delete [] inFix;
 }
+
+
+
 
 bool Calc::CheckTokens()
 {
-
-    //check for valid input
-    for(int i = 0; i < strlen(argvIn); i++)
+    for(int i = 0; i < strlen(inFix); i++)
     {
-        if(argvIn[i] == '+' || argvIn[i] == '-' || argvIn[i] == '*' || argvIn[i] == '/' || argvIn[i] == '(' || argvIn[i] == ')')
+        if(inFix[i] == '+' || inFix[i] == '-' || inFix[i] == '*' || inFix[i] == '/' || inFix[i] == '^' || inFix[i] == '(' || inFix[i] == ')')
         {
             continue;
         }
-        else if(argvIn[i] >= 'A' && argvIn[i] <= 'Z')
+        else if(inFix[i] >= 'A' && inFix[i] <= 'Z')
         {
             continue;
         }
-        else if(argvIn[i] >= '0' && argvIn[i] <= '9')
+        else if(inFix[i] >= '0' && inFix[i] <= '9')
         {
             continue;
         }
@@ -64,106 +65,92 @@ bool Calc::CheckTokens()
     return true;
 }
 
-
-
-    // int length = 0;
-    // for( int i = 0; i < argv[1].length(); i ++)
-    // {
-    //     if ( argv[1][i] == '(' or argv[1][i] == ')' )
-    //         length++;
-    //     else if (argv[1].isalpha() and argv[1].isupper())
-    //         length++;
-    //     else if (argv[1][i] == '+' or argv[1][i] == '-')
-    //         length++;
-    //     else if (argv[1][i] == '*' or argv[1][i] == '/')
-    //         length ++;
-    //     for ( int k = 0; k < 10; i++)
-    //     {
-    //         if( argv[1][i] == k )
-    //             length ++;
-    //     }
-    // }
-
-    // if (length == argv[1].length())
-    //     return true;
-    // return false;
-
-
-}
-
 void Calc::MakeValueTbl()
 {
+    //26 position valueTbl is dyanically allocated and filled with zeroes  
+    //valueIdx is set to 0
     valueTbl = new int[26];
+    valueIdx = 0;
     for(int i = 0; i < 26; i++)
     {
         valueTbl[i] = 0;
     }
-    valueIdx = 0;
-}
 
-//     char* table = new char[26];
-//     valueIdx = 0;
-//     for (int i = 0; i < 26; i++)
-//         table[i] = 0;
-// }
+}
 
 void Calc::Parse()
 {
-    char inFix = new char[argv[1].length()];
-    char postFix = new char[argv[1].length()];
-    int i = 0;
-    int j = 0;
-    while(i < argv[1].length())
+    //1. space for inFix expression is dynamically allocated 
+    char* inFixCopy = new char[strlen(inFix) + 1];
+    strcpy(inFixCopy, inFix);
+    //2. inFixCopy is copied to inFix
+    strcpy(inFix, inFixCopy);
+    //3. inFixCopy is deleted
+    delete [] inFixCopy;
+    //4. inFix is parsed
+    for(int i = 0; i < strlen(inFix); i++)
     {
-        if(argv[1][i] == '(')
+        if(inFix[i] == '+' || inFix[i] == '-' || inFix[i] == '*' || inFix[i] == '/' || inFix[i] == '^')
         {
-            inFix[j] = argv[1][i];
-            j++;
+            stk->Push(inFix[i]);
         }
-        else if(argv[1][i] == ')')
+        else if(inFix[i] >= 'A' && inFix[i] <= 'Z')
         {
-            inFix[j] = argv[1][i];
-            j++;
+            stk->Push(inFix[i]);
         }
-        else if(argv[1][i] == '+' or argv[1][i] == '-' or argv[1][i] == '*' or argv[1][i] == '/')
+        else if(inFix[i] >= '0' && inFix[i] <= '9')
         {
-            inFix[j] = argv[1][i];
-            j++;
+            stk->Push(inFix[i]);
         }
-        else if(argv[1][i] == 'A' or argv[1][i] == 'B' or argv[1][i] == 'C' or argv[1][i] == 'D' or argv[1][i] == 'E' or argv[1][i] == 'F' or argv[1][i] == 'G' or argv[1][i] == 'H' or argv[1][i] == 'I' or argv[1][i] == 'J' or argv[1][i] == 'K' or argv[1][i] == 'L' or argv[1][i] == 'M' or argv[1][i] == 'N' or argv[1][i] == 'O' or argv[1][i] == 'P' or argv[1][i] == 'Q' or argv[1][i] == 'R' or argv[1][i] == 'S' or argv[1][i] == 'T' or argv[1][i] == 'U' or argv[1][i] == 'V' or argv[1][i] == 'W' or argv[1][i] == 'X' or argv[1][i] == 'Y' or argv[1][i] == 'Z')
-            inFix[j] = argv[1][i];
-            j++;
-        else if(argv[1][i] == '0' or argv[1][i] == '1' or argv[1][i] == '2' or argv[1][i] == '3' or argv[1][i] == '4' or argv[1][i] == '5' or argv[1][i] == '6' or argv[1][i] == '7' or argv[1][i] == '8' or argv[1][i] == '9')
+        else if(inFix[i] == '(')
         {
-            inFix[j] = argv[1][i];
-            j++;
+            stk->Push(inFix[i]);
         }
-        else
+        else if(inFix[i] == ')')
         {
-            cout << "Invalid input.  Terminating program." << endl;
-            exit(EXIT_FAILURE);
+            while(stk->Peek() != '(')
+            {
+                stk->Pop();
+            }
+            stk->Pop();
         }
-        i++;
-
+    }
+    //5. while the stack is not empty, pop the stack and push the popped value to the output stack
+    while(!stk->IsEmpty())
+    {
+        stk->Pop();
+    }
 }
+
 
 bool Calc::CheckParens()
 {
-    int left = 0;
-    int right = 0;
-    for ( int i = 0; i < argv[1].length(); i++)
+    int leftParens = 0;
+    int rightParens = 0;
+    for(int i = 0; i < strlen(inFix); i++)
     {
-        if ( argv[1][i] == '(')
-            left++;
-        else if ( argv[1][i] == ')')
-            right++;
+        if(inFix[i] == '(')
+        {
+            leftParens++;
+        }
+        else if(inFix[i] == ')')
+        {
+            rightParens++;
+        }
     }
-    if ( left == right)
+    if(leftParens == rightParens)
+    {
         return true;
- return false;
+    }
+    else
+    {
+        return false;
+    }
 }
+
+
 
 void Calc::DisplayInFix()
 {
-    cout << "Infix: " << infix << endl;
+    cout << inFix << endl;
 }
