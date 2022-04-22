@@ -73,7 +73,42 @@ void Calc::MakeValueTbl()
 
 void Calc::Parse()
 {
-    
+    char inFix = new char[argv[1].length()];
+    char postFix = new char[argv[1].length()];
+    int i = 0;
+    int j = 0;
+    while(i < argv[1].length())
+    {
+        if(argv[1][i] == '(')
+        {
+            inFix[j] = argv[1][i];
+            j++;
+        }
+        else if(argv[1][i] == ')')
+        {
+            inFix[j] = argv[1][i];
+            j++;
+        }
+        else if(argv[1][i] == '+' or argv[1][i] == '-' or argv[1][i] == '*' or argv[1][i] == '/')
+        {
+            inFix[j] = argv[1][i];
+            j++;
+        }
+        else if(argv[1][i] == 'A' or argv[1][i] == 'B' or argv[1][i] == 'C' or argv[1][i] == 'D' or argv[1][i] == 'E' or argv[1][i] == 'F' or argv[1][i] == 'G' or argv[1][i] == 'H' or argv[1][i] == 'I' or argv[1][i] == 'J' or argv[1][i] == 'K' or argv[1][i] == 'L' or argv[1][i] == 'M' or argv[1][i] == 'N' or argv[1][i] == 'O' or argv[1][i] == 'P' or argv[1][i] == 'Q' or argv[1][i] == 'R' or argv[1][i] == 'S' or argv[1][i] == 'T' or argv[1][i] == 'U' or argv[1][i] == 'V' or argv[1][i] == 'W' or argv[1][i] == 'X' or argv[1][i] == 'Y' or argv[1][i] == 'Z')
+            inFix[j] = argv[1][i];
+            j++;
+        else if(argv[1][i] == '0' or argv[1][i] == '1' or argv[1][i] == '2' or argv[1][i] == '3' or argv[1][i] == '4' or argv[1][i] == '5' or argv[1][i] == '6' or argv[1][i] == '7' or argv[1][i] == '8' or argv[1][i] == '9')
+        {
+            inFix[j] = argv[1][i];
+            j++;
+        }
+        else
+        {
+            cout << "Invalid input.  Terminating program." << endl;
+            exit(EXIT_FAILURE);
+        }
+        i++;
+
 }
 
 bool Calc::CheckParens()
@@ -94,5 +129,5 @@ bool Calc::CheckParens()
 
 void Calc::DisplayInFix()
 {
-
+    cout << "Infix: " << infix << endl;
 }
