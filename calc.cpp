@@ -40,36 +40,72 @@ Calc::~Calc()
 
 bool Calc::CheckTokens()
 {
-    int length = 0;
-    for( int i = 0; i < argv[1].length(); i ++)
+
+    //check for valid input
+    for(int i = 0; i < strlen(argvIn); i++)
     {
-        if ( argv[1][i] == '(' or argv[1][i] == ')' )
-            length++;
-        else if (argv[1].isalpha() and argv[1].isupper())
-            length++;
-        else if (argv[1][i] == '+' or argv[1][i] == '-')
-            length++;
-        else if (argv[1][i] == '*' or argv[1][i] == '/')
-            length ++;
-        for ( int k = 0; k < 10; i++)
+        if(argvIn[i] == '+' || argvIn[i] == '-' || argvIn[i] == '*' || argvIn[i] == '/' || argvIn[i] == '(' || argvIn[i] == ')')
         {
-            if( argv[1][i] == k )
-                length ++;
+            continue;
+        }
+        else if(argvIn[i] >= 'A' && argvIn[i] <= 'Z')
+        {
+            continue;
+        }
+        else if(argvIn[i] >= '0' && argvIn[i] <= '9')
+        {
+            continue;
+        }
+        else
+        {
+            return false;
         }
     }
+    return true;
+}
 
-    if (length == argv[1].length())
-        return true;
-    return false;
+
+
+    // int length = 0;
+    // for( int i = 0; i < argv[1].length(); i ++)
+    // {
+    //     if ( argv[1][i] == '(' or argv[1][i] == ')' )
+    //         length++;
+    //     else if (argv[1].isalpha() and argv[1].isupper())
+    //         length++;
+    //     else if (argv[1][i] == '+' or argv[1][i] == '-')
+    //         length++;
+    //     else if (argv[1][i] == '*' or argv[1][i] == '/')
+    //         length ++;
+    //     for ( int k = 0; k < 10; i++)
+    //     {
+    //         if( argv[1][i] == k )
+    //             length ++;
+    //     }
+    // }
+
+    // if (length == argv[1].length())
+    //     return true;
+    // return false;
+
+
 }
 
 void Calc::MakeValueTbl()
 {
-    char* table = new char[26];
+    valueTbl = new int[26];
+    for(int i = 0; i < 26; i++)
+    {
+        valueTbl[i] = 0;
+    }
     valueIdx = 0;
-    for (int i = 0; i < 26; i++)
-        table[i] = 0;
 }
+
+//     char* table = new char[26];
+//     valueIdx = 0;
+//     for (int i = 0; i < 26; i++)
+//         table[i] = 0;
+// }
 
 void Calc::Parse()
 {
