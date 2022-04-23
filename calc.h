@@ -1,8 +1,8 @@
 /*
-Name: Paul De Palma
+Name: Louis Cerda and Finn Dugan
 Class: CPSC 122, Section 1
 Date Submitted: February 25, 2021
-Assignment: N/A 
+Assignment: Project #13
 Description: Part 1 of Calculator Assignment 
 To Compile: make
 To Execute: ./calc "(121+12)"

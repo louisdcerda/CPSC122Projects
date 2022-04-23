@@ -67,15 +67,12 @@ bool Calc::CheckTokens()
 
 void Calc::MakeValueTbl()
 {
-    //26 position valueTbl is dyanically allocated and filled with zeroes  
-    //valueIdx is set to 0
     valueTbl = new int[26];
-    valueIdx = 0;
     for(int i = 0; i < 26; i++)
     {
         valueTbl[i] = 0;
     }
-
+    valueIdx = 0;
 }
 
 void Calc::Parse()
@@ -90,7 +87,7 @@ void Calc::Parse()
     //4. inFix is parsed
     for(int i = 0; i < strlen(inFix); i++)
     {
-        if(inFix[i] == '+' || inFix[i] == '-' || inFix[i] == '*' || inFix[i] == '/' || inFix[i] == '^')
+        if(inFix[i] == '+' || inFix[i] == '-' || inFix[i] == '*' || inFix[i] == '/')
         {
             stk->Push(inFix[i]);
         }
@@ -149,8 +146,8 @@ bool Calc::CheckParens()
 }
 
 
-
 void Calc::DisplayInFix()
 {
     cout << inFix << endl;
 }
+
