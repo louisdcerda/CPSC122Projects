@@ -15,7 +15,7 @@ Calc::Calc(char* argvIn)
 
     for (int i = strlen(argvIn); i >= 0; i--)
     {
-        stk->Push(argvIn[i]);
+        stk->Push(argvIn[i - 1]);
     }
 
 
@@ -36,16 +36,12 @@ Calc::Calc(char* argvIn)
         cout << "Error: Invalid input" << endl;
         exit(EXIT_FAILURE);
     }
-
-    InFixToPostFix();
-
-
 }
 
 Calc::~Calc()
 {
     delete stk;
-    // valueIdx = 0;
+    valueIdx = 0;
     delete valueTbl;
     delete inFix;
 }
@@ -83,8 +79,8 @@ void Calc::MakeValueTbl()
 void Calc::Parse()
 {
     int len = stk->GetLength();
-    inFix = new char[len];
-    char* temp = new char[len];
+    inFix = new char[len + 1];
+    char* temp = new char[len + 1];
     int index = 0;
     int index1 = 0;
     int index2 = 0;
@@ -162,99 +158,6 @@ void Calc::DisplayInFix()
         cout << inFix[i];
     }
     cout << endl;
-}
-
-
-void Calc::InFixToPostFix()
-{
-    int par = 0;
-    int len = 0;
-    char ch;
-    for (int i = 0; inFix[i] != 0; i++)
-    {
-        if (inFix[i] == '(' || inFix[i] == ')')
-            par++;
-        len++;
-    }
-    postFix = new char[len - par];
-    int index = 0;
-    for (int i = 0; inFix[i] != '\0'; i++)
-    {
-        ch = inFix[i];
-
-        if (ch >= 65 && ch <= (65 + 26))
-        {
-            postFix[index] = ch;
-            index++;
-        }
-
-        else if (ch == '(')
-            stk->Push(ch);
-        else if (ch == ')')
-        {
-            while (stk->Peek() != '(')
-            {
-                postFix[index] = stk->Peek();
-                index++;
-                stk->Pop();
-            }
-            stk->Pop();
-        }
-        else 
-            stk->Push(ch);
-    }
-    postFix[index] = '\0';
-}
-
-void Calc::DisplayPostFix()
-{
-    for (int i = 0; postFix[i] != '\0'; i++)
-    {
-        cout << postFix[i];
-    }
-    cout << endl;
-}
-
-int Calc::Evaluate()
-{
-    char ch;
-    int res;
-    int resCh;
-
-    for (int i = 0; postFix[i] != '\0'; i++)
-    {
-        ch = postFix[i];
-        if (ch >= 65 && ch <= (65 + 26))
-        {
-            stk->Push(resCh);
-        }
-       else 
-       {
-            char var1 = stk->Peek(); stk->Pop();
-            char var2 = stk->Peek(); stk->Pop();
-
-            int num = valueTbl[var1 - 65];
-            int num2 = valueTbl[var2 - 65];
-
-
-            if (ch == '+')
-                res = var1 + var2;
-            else if (ch == '-')
-                res = var1 - var2;
-            else if (ch == '*')
-                res = var1 * var2;
-            else if (ch == '/')
-                res = var1 / var2;
-            
-
-
-            valueTbl[valueIdx] = res;
-            resCh = char(valueIdx + 65);
-            stk->Push(resCh);
-            valueIdx++;
-       }
-    }
-    return valueTbl[stk->Peek() - 65];
 }
 
 
